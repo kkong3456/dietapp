@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
 
-        title: Text(''),
+        title: Text('xx'),
       ),
       body: Container(),
       floatingActionButton: FloatingActionButton(
