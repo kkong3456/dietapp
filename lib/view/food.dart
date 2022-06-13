@@ -55,7 +55,9 @@ class _FoodAddPageState extends State<FoodAddPage>{
                         ),
                     aspectRatio: 1/1,
                   ),
-                  onTap:(){},
+                  onTap:(){
+                    selectImage();
+                  },
                 ),
               );
             }else if(idx==1){
