@@ -1,4 +1,5 @@
 import 'package:dietapp/data/data.dart';
+import 'package:dietapp/data/database.dart';
 import 'package:dietapp/data/utils.dart';
 import 'package:dietapp/style.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,11 @@ class _FoodAddPageState extends State<FoodAddPage>{
   Food get food=>widget.food;
   TextEditingController memoController=TextEditingController();
   @override
+  void initState(){
+    food.memo=memoController.text;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
@@ -31,9 +37,12 @@ class _FoodAddPageState extends State<FoodAddPage>{
         actions:[
           TextButton(
             child:const Text("저장"),
-            onPressed:(){
+            onPressed:() async {
               //저장하고 종료
-              selectImage();
+              final db=DatabaseHelper.instance;
+              food.memo=memoController.text;
+              await db.insertFood(food);
+              Navigator.of(context).pop();
             },
           ),
         ]
@@ -48,11 +57,11 @@ class _FoodAddPageState extends State<FoodAddPage>{
                 width:cardSize,
                 child:InkWell(
                   child:AspectRatio(
-                    child:food.image.isEmpty?Image.asset("assets/img/food.png"):
+                    child:Align(child:food.image.isEmpty?Image.asset("assets/img/food.png"):
                         AssetThumb(asset:Asset(food.image,"food.png",0,0),
                         width:cardSize.toInt(),
                         height:cardSize.toInt(),
-                        ),
+                        )),
                     aspectRatio: 1/1,
                   ),
                   onTap:(){
@@ -61,15 +70,38 @@ class _FoodAddPageState extends State<FoodAddPage>{
                 ),
               );
             }else if(idx==1){
+              String _t=food.time.toString();
+              String _m=_t.substring(_t.length-2);
+              String _h=_t.substring(0,_t.length-2);
+              TimeOfDay time=TimeOfDay(hour:int.parse(_h),minute:int.parse(_m));
+              // print("xxx is $_m");
+              // print("yyy is $_h");
               return Container(
                 margin:const EdgeInsets.symmetric(horizontal: 26,vertical: 16),
                 child:Column(
                   children: [
                     Row(
                       mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text("식사시간"),
-                        Text("오전 11:32")
+                        InkWell(
+                          child:food.time!=null ?
+                            Text("${time.hour>11?"오후 ":"오전 "}${Utils.makeTwoDigit(time.hour%12)}"
+                                ":${Utils.makeTwoDigit(time.minute)}"):Text("오전 11:32"),
+                          onTap:() async {
+                            TimeOfDay _time=await showTimePicker(
+                              context: context, initialTime: TimeOfDay.now(),
+                            );
+
+                            if(_time==null){
+                              return;
+                            }
+
+                            setState((){
+                              food.time=int.parse("${_time.hour}${Utils.makeTwoDigit(_time.minute)}");
+                            });
+                          }
+                        ),
                       ],
                     ),
                     Container(
