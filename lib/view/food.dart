@@ -2,6 +2,7 @@ import 'package:dietapp/data/data.dart';
 import 'package:dietapp/data/utils.dart';
 import 'package:dietapp/style.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 
 class FoodAddPage extends StatefulWidget{
@@ -17,23 +18,49 @@ class FoodAddPage extends StatefulWidget{
 
 class _FoodAddPageState extends State<FoodAddPage>{
   Food get food=>widget.food;
+  TextEditingController memoController=TextEditingController();
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        iconTheme:const IconThemeData(
+          color:txtColor,
+        ),
+        elevation: 0.3,
+        actions:[
+          TextButton(
+            child:const Text("저장"),
+            onPressed:(){
+              //저장하고 종료
+              selectImage();
+            },
+          ),
+        ]
+      ),
       body:Container(
         child:ListView.builder(
           itemBuilder:(ctx,idx){
             if(idx==0){
               return Container(
-                // child:InkWell(
-                //   child:Image.asset(""),
-                //   onTap:(){},
-                // ),
+                margin:const EdgeInsets.symmetric(vertical: 16),
+                height: cardSize,
+                width:cardSize,
+                child:InkWell(
+                  child:AspectRatio(
+                    child:food.image.isEmpty?Image.asset("assets/img/food.png"):
+                        AssetThumb(asset:Asset(food.image,"food.png",0,0),
+                        width:cardSize.toInt(),
+                        height:cardSize.toInt(),
+                        ),
+                    aspectRatio: 1/1,
+                  ),
+                  onTap:(){},
+                ),
               );
             }else if(idx==1){
               return Container(
-                margin:const EdgeInsets.symmetric(horizontal: 26),
+                margin:const EdgeInsets.symmetric(horizontal: 26,vertical: 16),
                 child:Column(
                   children: [
                     Row(
@@ -74,7 +101,7 @@ class _FoodAddPageState extends State<FoodAddPage>{
 
             }else if(idx==2){
               return Container(
-                margin:const EdgeInsets.symmetric(horizontal: 26,vertical: 26),
+                margin:const EdgeInsets.symmetric(horizontal: 26,vertical: 16),
                 child:Column(
                   children: [
                     Row(
@@ -113,6 +140,29 @@ class _FoodAddPageState extends State<FoodAddPage>{
                 ),);
 
 
+            }else if(idx==3){
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
+                child:Column(
+                  crossAxisAlignment:CrossAxisAlignment.start,
+                  children: [
+                    const Text("메모"),
+                    Container(height:12),
+                    TextField(
+                      maxLines:5,
+                      minLines:5,
+                      // keyboardType:TextInputType.multiline,
+                      controller: memoController,
+                      decoration:InputDecoration(
+                        border:OutlineInputBorder(
+                          borderSide:const BorderSide(color:txtColor,width:5),
+                          borderRadius:BorderRadius.circular(12),
+                        )
+                      ),
+                    )
+                  ],
+                ),
+              );
             }
 
             return Container();
@@ -122,5 +172,16 @@ class _FoodAddPageState extends State<FoodAddPage>{
       ),
     );
   }
+  Future<void> selectImage() async {
+    final _img=await MultiImagePicker.pickImages(maxImages: 1,enableCamera: true);
 
+    if(_img.isEmpty){
+      return "ERROR";
+    }
+
+    setState((){
+      food.image=_img.first.identifier;
+    });
+
+  }
 }
