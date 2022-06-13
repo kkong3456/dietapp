@@ -1,5 +1,9 @@
+import 'package:dietapp/data/data.dart';
+import 'package:dietapp/data/utils.dart';
 import 'package:dietapp/style.dart';
+import 'package:dietapp/view/food.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,8 +57,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 child:Column(
                   children: [
                     TextButton(
-                      child:Text("식단"),
-                      onPressed:(){}
+                      child:const Text("식단"),
+                      onPressed:() async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(builder:(ctx)=>FoodAddPage(
+                              food:Food(
+                                date:Utils.getFormatTime(DateTime.now()),
+                                kcal:0,
+                                memo:"",
+                                type:0,
+                                image:"",
+                                time:1130,
+                              )
+                          )));
+                      }
                     ),
                     TextButton(
                       child:Text("운동"),
