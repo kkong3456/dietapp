@@ -2,19 +2,21 @@ class Food{
   int id;
   int date;
   int type;
+  int meal;
   int kcal;
   int time;
 
   String memo;
   String image;
 
-  Food({this.id,this.date,this.type,this.kcal,this.time,this.memo,this.image});
+  Food({this.id,this.date,this.type,this.meal,this.kcal,this.time,this.memo,this.image});
 
   factory Food.fromDB(Map<String,dynamic> data){
     return Food(
       id:data["id"],
       date:data["date"],
       type:data["type"],
+      meal:data["meal"],
       kcal:data["kcal"],
       time:data["time"],
       memo:data["memo"],
@@ -27,6 +29,7 @@ class Food{
       "id":id,
       "date":date,
       "type":type,
+      "meal":meal,
       "kcal":kcal,
       "time":time,
       "memo":memo,

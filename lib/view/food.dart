@@ -37,11 +37,14 @@ class _FoodAddPageState extends State<FoodAddPage>{
                 child:Column(
                   children: [
                     Row(
-                      mainAxisAlignment:MainAxisAlignment.spaceAround,
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
                       children: const [
                         Text("식사시간"),
                         Text("오전 11:32")
                       ],
+                    ),
+                    Container(
+                      height:12,
                     ),
                     GridView.count(
                       physics:const NeverScrollableScrollPhysics(),
@@ -68,6 +71,47 @@ class _FoodAddPageState extends State<FoodAddPage>{
                     )
                   ],
                 ),);
+
+            }else if(idx==2){
+              return Container(
+                margin:const EdgeInsets.symmetric(horizontal: 26,vertical: 26),
+                child:Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text("식단 평가"),
+                      ],
+                    ),
+                    Container(
+                      height:8,
+                    ),
+                    GridView.count(
+                      physics:const NeverScrollableScrollPhysics(),
+                      shrinkWrap:true,
+                      crossAxisCount: 4,
+                      childAspectRatio:2.5/1, //2가로, 1 세로
+                      crossAxisSpacing:4,
+                      children: List.generate(mealType.length, (_idx){
+                        return InkWell(child:Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius:BorderRadius.circular(8),
+                            color:food.meal==_idx?mainColor:ibgColor,
+                          ),
+                          child:Text(mealType[_idx],style:TextStyle(color:food.meal==_idx?Colors.white:iTxColor)),
+                        ),
+                            onTap:(){
+                              setState((){
+                                food.meal=_idx;
+                              });
+                            }
+                        );
+                      }),
+                    )
+                  ],
+                ),);
+
 
             }
 

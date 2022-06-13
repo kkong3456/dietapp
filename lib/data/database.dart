@@ -35,6 +35,7 @@ class DatabaseHelper{
         id integer primary key autoincrement,
         date integer default 0,
         type integer default 0,
+        meal integer default 0,
         kcal integer default 0,
         time integer default 0,
         
