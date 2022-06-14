@@ -42,6 +42,7 @@ class Workout{
   int id;
   int date;
   int time;
+  int type;
   int kcal;
   int intense;
   int part;
@@ -49,13 +50,14 @@ class Workout{
   String name;
   String memo;
 
-  Workout({this.id,this.date,this.time,this.kcal,this.intense,this.part,this.name,this.memo});
+  Workout({this.id,this.date,this.time,this.type,this.kcal,this.intense,this.part,this.name,this.memo});
 
   factory Workout.fromDB(Map<String,dynamic> data){
     return Workout(
       id:data["id"],
       date:data["date"],
       time:data["time"],
+      type:data["type"],
       kcal: data["kcal"],
       intense:data["intense"],
       part:data["part"],
@@ -70,6 +72,7 @@ class Workout{
       "id":id,
       "date":date,
       "time":time,
+      "type":type,
       "kcal":kcal,
       "intense":intense,
       "part":part,
