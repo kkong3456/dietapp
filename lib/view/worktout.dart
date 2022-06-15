@@ -21,11 +21,17 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
   Workout get workout=>widget.workout;
   TextEditingController memoController=TextEditingController();
   TextEditingController nameController=TextEditingController();
+  TextEditingController timeController=TextEditingController();
+  TextEditingController calController=TextEditingController();
+  TextEditingController distanceController=TextEditingController();
 
   @override
   void initState(){
-    workout.memo=memoController.text;
-    workout.name=nameController.text;
+    memoController.text=workout.memo;
+    nameController.text=workout.name;
+    timeController.text=workout.time.toString();
+    calController.text=workout.kcal.toString();
+    distanceController.text=workout.distance.toString();
     super.initState();
   }
   @override
@@ -44,6 +50,25 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                 //저장하고 종료
                 final db=DatabaseHelper.instance;
                 workout.memo=memoController.text;
+                workout.name=nameController.text;
+
+                if(timeController.text.isEmpty){
+                  workout.time=0;
+                }else{
+                  workout.time=int.parse(timeController.text);
+                }
+
+                if(calController.text.isEmpty){
+                  workout.kcal=0;
+                }else{
+                  workout.kcal=int.parse(calController.text);
+                }
+
+                if(distanceController.text.isEmpty){
+                  workout.distance=0;
+                }else{
+                  workout.distance=int.parse(distanceController.text);
+                }
                 await db.insertWorkout(workout);
                 Navigator.of(context).pop();
               },
@@ -55,6 +80,7 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
             itemBuilder:(ctx,idx){
               if(idx==0){
                 return Container(
+                  margin:const EdgeInsets.symmetric(horizontal:16,vertical:16),
                   child:Row(
                     children: [
                       Container(child:InkWell(
@@ -65,7 +91,12 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                             workout.type=workout.type%4;
                           });
                         }
-                      ),width:70,height:70),
+                      ),width:70,height:70,margin:const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color:ibgColor,
+                          borderRadius: BorderRadius.circular(70),
+                        ),
+                      ),
                       Container(height:8),
                       Expanded(
                         child:TextField(
@@ -89,14 +120,59 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                     children: [
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                        children:const [
-                          Text("식사시간"),
-                          Text("식사시간"),
+                        children:[
+                          Text("운동시간"),
+                          Container(child:TextField(
+                            controller:timeController,
+                            keyboardType:TextInputType.number,
+                            textAlign:TextAlign.end,
+                            decoration:InputDecoration(
+                              border:UnderlineInputBorder(
+                                borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                borderRadius:BorderRadius.circular(8)
+                            )
+                          ),),
+                            width:70,
+                          )
                         ],
                       ),
-                      Container(
-                        height:12,
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                        children:[
+                          Text("운동칼로리"),
+                          Container(child:TextField(
+                            controller:calController,
+                            keyboardType:TextInputType.number,
+                            textAlign:TextAlign.end,
+                            decoration:InputDecoration(
+                                border:UnderlineInputBorder(
+                                    borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                    borderRadius:BorderRadius.circular(8)
+                                )
+                            ),),
+                            width:70,
+                          )
+                        ],
                       ),
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                        children:[
+                          Text("운동거리"),
+                          Container(child:TextField(
+                            controller:distanceController,
+                            keyboardType:TextInputType.number,
+                            textAlign:TextAlign.end,
+                            decoration:InputDecoration(
+                                border:UnderlineInputBorder(
+                                    borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                    borderRadius:BorderRadius.circular(8)
+                                )
+                            ),),
+                            width:70,
+                          )
+                        ],
+                      ),
+
                     ],
                   ),);
 
@@ -122,6 +198,7 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                         crossAxisSpacing:4,
                         children: List.generate(wPart.length, (_idx){
                           return InkWell(child:Container(
+                            margin:const EdgeInsets.symmetric(vertical: 3,horizontal: 1),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius:BorderRadius.circular(8),
@@ -161,6 +238,7 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                         crossAxisSpacing:4,
                         children: List.generate(wIntense.length, (_idx){
                           return InkWell(child:Container(
+                            margin:const EdgeInsets.symmetric(vertical:3,horizontal:1),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius:BorderRadius.circular(8),

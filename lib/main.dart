@@ -1,6 +1,7 @@
 import 'package:dietapp/data/data.dart';
 import 'package:dietapp/data/utils.dart';
 import 'package:dietapp/style.dart';
+import 'package:dietapp/view/body.dart';
 import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               kcal:0,
                               intense:0,
                               part:0,
+                              distance:0,
                               name:"",
                               memo:"",
                             )
@@ -99,7 +101,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     TextButton(
                       child:Text("눈바디"),
-                      onPressed:(){},
+                      onPressed:() async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(builder:(ctx)=>EyeBodyAddPage(
+                            body:EyeBody(
+                              date:Utils.getFormatTime(DateTime.now()),
+                              image:"",
+                              memo:"",
+                            )
+                          ))
+                        );
+                      },
                     ),
                   ],
                 ),

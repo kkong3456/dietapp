@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 
 class DatabaseHelper{
   static final _databaseName = "dietapp.db";
-  static final _databaseVersion=1;
+  static final _databaseVersion=2;
   static final foodTable="food";
   static final workoutTable="workout";
   static final bodyTable="body";
@@ -48,6 +48,8 @@ class DatabaseHelper{
         id integer primary key autoincrement,
         date integer default 0,
         time integer default 0,
+        type integer default 0,
+        distance integer default 0,
         kcal integer default 0,
         intense integer default 0,
         part integer default 0,
@@ -75,7 +77,18 @@ class DatabaseHelper{
       )
     """);
   }
-  Future<void> _onUpgrade(Database db,int oldVersion,int newVersion) async {}
+  Future<void> _onUpgrade(Database db,int oldVersion,int newVersion) async {
+    if(newVersion==2){
+      await db.execute("""
+        alter table $workoutTable 
+        add type integer default 0,
+      """);
+      await db.execute("""
+        alter table $workoutTable
+        add distance integer default 0,
+      """);
+    }
+  }
 
   //데이터 추가,변경,검색,삭제
   Future<int> insertFood(Food food) async {
