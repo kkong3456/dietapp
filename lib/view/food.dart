@@ -219,3 +219,27 @@ class _FoodAddPageState extends State<FoodAddPage>{
 
   }
 }
+
+class MainFoodCard extends StatelessWidget{
+  final Food food;
+  MainFoodCard({Key key,this.food}):super(key:key);
+
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      child:AspectRatio(
+        child:Stack(
+          children: [
+            Positioned.fill(
+              child:AssetThumb(
+                asset:Asset(food.image,"food.png",0,0),
+                width:cardSize.toInt(),
+                height:cardSize.toInt(),
+              )
+            )
+          ],
+        )
+      )
+    );
+  }
+}

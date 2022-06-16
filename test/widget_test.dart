@@ -13,10 +13,5 @@ import 'package:dietapp/main.dart';
 
 void main() {
 
-    var xxx=Utils.getFormatTime(DateTime.now());
-    print(xxx);
-
-    var kkk=Utils.stringToDateTime("20220611");
-    print(kkk);
 }
 
