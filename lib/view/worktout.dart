@@ -301,3 +301,49 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
 
   }
 }
+
+class MainWorkoutCard extends StatelessWidget{
+  final Workout workout;
+
+  MainWorkoutCard({Key key,this.workout}):super(key:key);
+
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      child:ClipRRect(
+        child:AspectRatio(
+          aspectRatio: 1/1,
+          child:Container(
+            child:Column(
+              children: [
+                Row(
+                  children: [
+                    Container(child:Image.asset("assets/img/${workout.type}.png"),width:30,height:30,margin:const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color:ibgColor,
+                        borderRadius: BorderRadius.circular(70),
+                      ),
+                    ),
+                    Expanded(
+                      child:Text(
+                          "${Utils.makeTwoDigit(workout.time ~/60)}:"
+                              "${Utils.makeTwoDigit(workout.time%60)}",
+                        textAlign:TextAlign.end,
+
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child:Text(workout.name),
+                ),
+                Text(workout.kcal==0?"":"${workout.kcal}Kcal"),
+                Text(workout.distance==0?"":"${workout.distance}Km"),
+              ],
+            )
+          )
+        )
+      )
+    );
+  }
+}

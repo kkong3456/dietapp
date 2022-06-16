@@ -226,19 +226,55 @@ class MainFoodCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    String _t=food.time.toString();
+    String _m=_t.substring(_t.length-2);
+    String _h=_t.substring(0,_t.length-2);
+
+    TimeOfDay time=TimeOfDay(hour:int.parse(_h),minute: int.parse(_m));
+    
     return Container(
-      child:AspectRatio(
-        child:Stack(
-          children: [
-            Positioned.fill(
-              child:AssetThumb(
-                asset:Asset(food.image,"food.png",0,0),
-                width:cardSize.toInt(),
-                height:cardSize.toInt(),
+      child:ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: AspectRatio(
+          child:Stack(
+            children: [
+              Positioned.fill(
+                child:AssetThumb(
+                  asset:Asset(food.image,"food.png",0,0),
+                  width:cardSize.toInt(),
+                  height:cardSize.toInt(),
+                )
+              ),
+              Positioned.fill(
+                child:Container(
+                  color:Colors.black12,
+                ),
+              ),
+              Positioned(
+                left:0,
+                right:0,
+                top:0,
+                bottom:0,
+                child:Text(
+                "${time.hour>11?"오후":"오전"}"
+                "${Utils.makeTwoDigit(time.hour%12)}:"
+                "${Utils.makeTwoDigit(time.minute)}",
+                style:const TextStyle(color:Colors.white, fontWeight:FontWeight.bold,)
+                ),
+              ),
+              Positioned(
+                child:Container(
+                  padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+                  child:Text(mealTime[food.time],style:const TextStyle(color:Colors.white),),
+                  decoration: BoxDecoration(
+                    color:mainColor,
+                    borderRadius:BorderRadius.circular(8)
+                  ),
+                )
               )
-            )
-          ],
-        )
+            ],
+          )
+        ),
       )
     );
   }

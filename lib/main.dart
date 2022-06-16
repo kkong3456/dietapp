@@ -1,4 +1,5 @@
 import 'package:dietapp/data/data.dart';
+import 'package:dietapp/data/database.dart';
 import 'package:dietapp/data/utils.dart';
 import 'package:dietapp/style.dart';
 import 'package:dietapp/view/body.dart';
@@ -37,7 +38,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final dbHelper=DatabaseHelper.instance;
+
   int currentIndex=0;
+
+  DateTime dateTime=DateTime.now();
+
+  List<Food> foods=[];
+  List<Workout> workouts=[];
+  List<EyeBody> bodies=[];
+  List<Weight> weight=[];
+
+  void getHistories() async{
+    int _d=Utils.getFormatTime(dateTime);
+
+    foods=await dbHelper.queryFoodByDate(_d);
+    workouts=await dbHelper.queryWorkoutByDate(_d);
+    bodies=await dbHelper.queryEyeBodyByDate(_d);
+    weight=await dbHelper.queryWeightByDate(_d);
+
+    setState((){});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(child:ListView.builder(
             itemBuilder: (ctx,idx){
               return Container(
+                // child:MainFoodCard(),
                 height:cardSize,
                 width:cardSize,
                 color:mainColor,
