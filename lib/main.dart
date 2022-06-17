@@ -246,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color:mainColor,
               );
             },
-            itemCount:bodies.length,
+            itemCount:2,
             scrollDirection: Axis.horizontal,
           ),
             height:cardSize,

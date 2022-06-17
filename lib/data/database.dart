@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 
 class DatabaseHelper{
   static final _databaseName = "dietapp.db";
-  static final _databaseVersion=2;
+  static final _databaseVersion=3;
   static final foodTable="food";
   static final workoutTable="workout";
   static final bodyTable="body";
@@ -78,18 +78,18 @@ class DatabaseHelper{
     """);
   }
   Future<void> _onUpgrade(Database db,int oldVersion,int newVersion) async {
-    if(newVersion==2){
-      await db.execute("""
-        alter table $workoutTable 
-        add type integer default 0,
-      """);
-      await db.execute("""
-        alter table $workoutTable
-        add distance integer default 0,
-      """);
+    if(newVersion==3){
+      // await db.execute("""
+      //   alter table $workoutTable
+      //   add type integer default 0,
+      // """);
+      // await db.execute("""
+      //   alter table $workoutTable
+      //   add distance integer default 0,
+      // """);
       await db.execute("""
         alter table $bodyTable
-        rename column mema to memo,
+        rename column meme to memo
       """);
     }
   }

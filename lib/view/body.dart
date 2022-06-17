@@ -41,6 +41,7 @@ class _EyeBodyAddPageState extends State<EyeBodyAddPage>{
                 //저장하고 종료
                 final db=DatabaseHelper.instance;
                 body.memo=memoController.text;
+                print("body.memo is ${body.memo}");
                 await db.insertEyeBody(body);
                 Navigator.of(context).pop();
               },
@@ -123,6 +124,7 @@ class MainEyeBodyCard extends StatelessWidget{
   Widget build(BuildContext context){
     return Container(
         margin:const EdgeInsets.all(5),
+        height:cardSize,
         child:ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: AspectRatio(
