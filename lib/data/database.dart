@@ -97,11 +97,9 @@ class DatabaseHelper{
     if(food.id==null){  //생성
       final _map=food.toMap();
       return await db.insert(foodTable,_map);
-      print('food.id is not null');
     }else{  //변경
       final _map=food.toMap();
       return await db.update(foodTable, _map,where:"id=?",whereArgs:[food.id]);
-      print('food.id is null');
     }
   }
 

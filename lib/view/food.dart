@@ -34,15 +34,7 @@ class _FoodAddPageState extends State<FoodAddPage>{
           color:txtColor,
         ),
         elevation: 0.3,
-      //     int id;
-      // int date;
-      // int type;
-      // int meal;
-      //     int kcal;
-      //     int time;
-      //
-      //     String memo;
-      //     String image;
+
         actions:[
           TextButton(
             child:const Text("저장"),
@@ -50,14 +42,14 @@ class _FoodAddPageState extends State<FoodAddPage>{
               print("저장하고 종료");
               final db=DatabaseHelper.instance;
               food.memo=memoController.text;
-              print(food.id);
-              print(food.date);
-              print(food.type);
-              print(food.meal);
-              print(food.kcal);
-              print(food.time);
-              print(food.memo);
-              print(food.image);
+              // print(food.id);
+              // print(food.date);
+              // print(food.type);
+              // print(food.meal);
+              // print(food.kcal);
+              // print(food.time);
+              // print(food.memo);
+              // print(food.image);
               await db.insertFood(food);
               print("저장완료");
               Navigator.of(context).pop();
@@ -251,6 +243,7 @@ class MainFoodCard extends StatelessWidget{
     TimeOfDay time=TimeOfDay(hour:int.parse(_h),minute: int.parse(_m));
     
     return Container(
+      margin:const EdgeInsets.all(5),
       child:ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: AspectRatio(
@@ -266,22 +259,25 @@ class MainFoodCard extends StatelessWidget{
               ),
               Positioned.fill(
                 child:Container(
-                  color:Colors.black12,
+                  color:Colors.black26,
+                ),
+              ),
+              Positioned.fill(
+
+                child:Container(
+                  child: Text(
+                  "${time.hour>11?"오후":"오전"}"
+                  "${Utils.makeTwoDigit(time.hour%12)}:"
+                  "${Utils.makeTwoDigit(time.minute)}",
+                  style:const TextStyle(color:Colors.white, fontWeight:FontWeight.bold,),
+                    // textAlign:TextAlign.center,
+                  ),
+                  alignment:Alignment.center,
                 ),
               ),
               Positioned(
-                left:0,
-                right:0,
-                top:0,
-                bottom:0,
-                child:Text(
-                "${time.hour>11?"오후":"오전"}"
-                "${Utils.makeTwoDigit(time.hour%12)}:"
-                "${Utils.makeTwoDigit(time.minute)}",
-                style:const TextStyle(color:Colors.white, fontWeight:FontWeight.bold,)
-                ),
-              ),
-              Positioned(
+                right:6,
+                bottom:6,
                 child:Container(
                   padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
                   child:Text(mealTime[food.meal],style:const TextStyle(color:Colors.white),),

@@ -6,4 +6,4 @@ const txtColor=Colors.black;
 final ibgColor=Colors.grey.withOpacity(0.1); //inactive color
 const iTxColor=Colors.black38;
 
-const double cardSize=130;
+const double cardSize=150;

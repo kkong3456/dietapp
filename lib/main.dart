@@ -202,7 +202,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child:MainFoodCard(food:foods[idx]),
                 height:cardSize,
                 width:cardSize,
-                color:mainColor,
               );
             },
             itemCount:foods.length,

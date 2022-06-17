@@ -314,11 +314,18 @@ class MainWorkoutCard extends StatelessWidget{
         child:AspectRatio(
           aspectRatio: 1/1,
           child:Container(
+            margin:const EdgeInsets.all(8),
+            padding:const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color:bgColor,
+              borderRadius:BorderRadius.circular(12),
+              boxShadow:const [BoxShadow(blurRadius: 4,spreadRadius:4,color:Colors.black12)]
+            ),
             child:Column(
               children: [
                 Row(
                   children: [
-                    Container(child:Image.asset("assets/img/${workout.type}.png"),width:30,height:30,margin:const EdgeInsets.symmetric(horizontal: 10),
+                    Container(child:Image.asset("assets/img/${workout.type}.png"),width:50,height:50,margin:const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
                         color:ibgColor,
                         borderRadius: BorderRadius.circular(70),
@@ -334,6 +341,7 @@ class MainWorkoutCard extends StatelessWidget{
                     ),
                   ],
                 ),
+                Container(height:8),
                 Expanded(
                   child:Text(workout.name),
                 ),
