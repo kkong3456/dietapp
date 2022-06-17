@@ -227,7 +227,18 @@ class _MyHomePageState extends State<MyHomePage> {
               if(idx==0){
                 //몸무게
               }else{
-                //눈바디
+                if(bodies.isEmpty){
+                  return Container(
+                    height:cardSize,
+                    width:cardSize,
+                    color:mainColor,
+                  );
+                }
+                return Container(
+                  height:cardSize,
+                  width:cardSize,
+                  child:MainEyeBodyCard(eyeBody:bodies[0]),
+                );
               }
               return Container(
                 height:cardSize,
@@ -235,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color:mainColor,
               );
             },
-            itemCount:2,
+            itemCount:bodies.length,
             scrollDirection: Axis.horizontal,
           ),
             height:cardSize,

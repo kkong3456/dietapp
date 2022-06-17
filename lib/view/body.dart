@@ -114,3 +114,36 @@ class _EyeBodyAddPageState extends State<EyeBodyAddPage>{
 
   }
 }
+
+class MainEyeBodyCard extends StatelessWidget{
+  final EyeBody eyeBody;
+  MainEyeBodyCard({Key key,this.eyeBody}):super(key:key);
+
+  @override
+  Widget build(BuildContext context){
+    return Container(
+        margin:const EdgeInsets.all(5),
+        child:ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: AspectRatio(
+              aspectRatio: 1.0,
+              child:Stack(
+                children: [
+                  Positioned.fill(
+                      child:AssetThumb(
+                        asset:Asset(eyeBody.image,"body.png",0,0),
+                        width:cardSize.toInt(),
+                        height:cardSize.toInt(),
+                      )
+                  ),
+                  Positioned.fill(
+                    child:Container(
+                      color:Colors.black26,
+                    ),
+                  ),
+                ],
+              )
+          ),
+        )
+    );
+  }}

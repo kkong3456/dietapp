@@ -64,7 +64,7 @@ class DatabaseHelper{
         id integer primary key autoincrement,
         date integer default 0,
         image String,
-        meme String
+        memo String
       )
     """);
 
@@ -86,6 +86,10 @@ class DatabaseHelper{
       await db.execute("""
         alter table $workoutTable
         add distance integer default 0,
+      """);
+      await db.execute("""
+        alter table $bodyTable
+        rename column mema to memo,
       """);
     }
   }
