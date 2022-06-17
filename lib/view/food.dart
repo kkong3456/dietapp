@@ -34,14 +34,32 @@ class _FoodAddPageState extends State<FoodAddPage>{
           color:txtColor,
         ),
         elevation: 0.3,
+      //     int id;
+      // int date;
+      // int type;
+      // int meal;
+      //     int kcal;
+      //     int time;
+      //
+      //     String memo;
+      //     String image;
         actions:[
           TextButton(
             child:const Text("저장"),
             onPressed:() async {
-              //저장하고 종료
+              print("저장하고 종료");
               final db=DatabaseHelper.instance;
               food.memo=memoController.text;
+              print(food.id);
+              print(food.date);
+              print(food.type);
+              print(food.meal);
+              print(food.kcal);
+              print(food.time);
+              print(food.memo);
+              print(food.image);
               await db.insertFood(food);
+              print("저장완료");
               Navigator.of(context).pop();
             },
           ),
@@ -185,7 +203,7 @@ class _FoodAddPageState extends State<FoodAddPage>{
                     TextField(
                       maxLines:5,
                       minLines:5,
-                      // keyboardType:TextInputType.multiline,
+                      keyboardType:TextInputType.multiline,
                       controller: memoController,
                       decoration:InputDecoration(
                         border:OutlineInputBorder(
@@ -236,6 +254,7 @@ class MainFoodCard extends StatelessWidget{
       child:ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: AspectRatio(
+          aspectRatio: 1.0,
           child:Stack(
             children: [
               Positioned.fill(
@@ -265,7 +284,7 @@ class MainFoodCard extends StatelessWidget{
               Positioned(
                 child:Container(
                   padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
-                  child:Text(mealTime[food.time],style:const TextStyle(color:Colors.white),),
+                  child:Text(mealTime[food.meal],style:const TextStyle(color:Colors.white),),
                   decoration: BoxDecoration(
                     color:mainColor,
                     borderRadius:BorderRadius.circular(8)

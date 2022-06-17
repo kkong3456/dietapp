@@ -55,9 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
     foods=await dbHelper.queryFoodByDate(_d);
     workouts=await dbHelper.queryWorkoutByDate(_d);
     bodies=await dbHelper.queryEyeBodyByDate(_d);
-    weight=await dbHelper.queryWeightByDate(_d);
+    // weight=await dbHelper.queryWeightByDate(_d);
 
     setState((){});
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getHistories();
   }
 
   @override
@@ -94,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 time:1130,
                               )
                           )));
+                        getHistories();
                       }
                     ),
                     TextButton(
@@ -114,11 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             )
                           ))
                         );
+                        getHistories();
                       },
                     ),
                     TextButton(
                       child:Text("몸무게"),
                       onPressed:(){},
+
                     ),
                     TextButton(
                       child:Text("눈바디"),
@@ -132,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             )
                           ))
                         );
+                        getHistories();
                       },
                     ),
                   ],
@@ -189,29 +199,29 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(child:ListView.builder(
             itemBuilder: (ctx,idx){
               return Container(
-                // child:MainFoodCard(),
+                child:MainFoodCard(food:foods[idx]),
                 height:cardSize,
                 width:cardSize,
                 color:mainColor,
               );
             },
-            itemCount:3,
+            itemCount:foods.length,
             scrollDirection: Axis.horizontal,
           ),
-            height:cardSize+20,
+            height:cardSize,
           ),
           Container(child:ListView.builder(
             itemBuilder:(ctx,idx){
               return Container(
                 height:cardSize,
                 width:cardSize,
-                color:mainColor,
+                child:MainWorkoutCard(workout:workouts[idx]),
               );
             },
-            itemCount:3,
+            itemCount:workouts.length,
             scrollDirection: Axis.horizontal,
           ),
-          height:cardSize+20
+          height:cardSize
           ),
           Container(child:ListView.builder(
             itemBuilder:(ctx,idx){
@@ -229,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount:2,
             scrollDirection: Axis.horizontal,
           ),
-            height:cardSize+20,
+            height:cardSize,
           ),
         ],
       ),

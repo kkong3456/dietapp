@@ -70,7 +70,7 @@ class DatabaseHelper{
 
     await db.execute("""
       create table if not exists $weightTable(
-        data integer default 0,
+        date integer default 0,
         weight integer default 0,
         fat integer default 0,
         muscle integer default 0
@@ -94,12 +94,14 @@ class DatabaseHelper{
   Future<int> insertFood(Food food) async {
     Database db=await instance.database;
 
-    if(food.id!=null){  //생성
+    if(food.id==null){  //생성
       final _map=food.toMap();
       return await db.insert(foodTable,_map);
+      print('food.id is not null');
     }else{  //변경
       final _map=food.toMap();
       return await db.update(foodTable, _map,where:"id=?",whereArgs:[food.id]);
+      print('food.id is null');
     }
   }
 
@@ -110,6 +112,7 @@ class DatabaseHelper{
 
     for(final q in query) {
       foods.add(Food.fromDB(q));
+      print('xxxx');
     }
     return foods;
   }
@@ -128,7 +131,7 @@ class DatabaseHelper{
   Future<int> insertWorkout(Workout workout) async {
     Database db=await instance.database;
 
-    if(workout.id!=null){  //생성
+    if(workout.id==null){  //생성
       final _map=workout.toMap();
       return await db.insert(workoutTable,_map);
     }else{  //변경
@@ -162,7 +165,7 @@ class DatabaseHelper{
   Future<int> insertEyeBody(EyeBody body) async {
     Database db=await instance.database;
 
-    if(body.id!=null){  //생성
+    if(body.id==null){  //생성
       final _map=body.toMap();
       return await db.insert(bodyTable,_map);
     }else{  //변경
