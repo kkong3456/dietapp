@@ -47,20 +47,30 @@ class _MyHomePageState extends State<MyHomePage> {
   DateTime dateTime=DateTime.now();
 
   List<Food> foods=[];
-  List<Workout> workouts=[];
-  List<EyeBody> bodies=[];
-  List<Weight> weight=[];
+  List<Food> allFoods=[];
 
+  List<Workout> workouts=[];
+  List<Workout> allWorkouts=[];
+
+  List<EyeBody> bodies=[];
+  List<EyeBody> allBodies=[];
+
+  List<Weight> weight=[];
   List<Weight> weights=[];
 
   void getHistories() async{
     int _d=Utils.getFormatTime(dateTime);
 
     foods=await dbHelper.queryFoodByDate(_d);
-    workouts=await dbHelper.queryWorkoutByDate(_d);
-    bodies=await dbHelper.queryEyeBodyByDate(_d);
-    weight=await dbHelper.queryWeightByDate(_d);
+    allFoods=await dbHelper.queryAllFood();
 
+    workouts=await dbHelper.queryWorkoutByDate(_d);
+    allWorkouts=await dbHelper.queryAllWorkout();
+
+    bodies=await dbHelper.queryEyeBodyByDate(_d);
+    allBodies=await dbHelper.queryAllEyeBody();
+
+    weight=await dbHelper.queryWeightByDate(_d);
     weights=await dbHelper.queryAllWeight();
 
     if(weight.isNotEmpty){
@@ -207,6 +217,8 @@ class _MyHomePageState extends State<MyHomePage> {
       return getHistoryWidget();
     }else if(currentIndex==2){
       return getWeightWidget();
+    }else if(currentIndex==3){
+      return getStatisticWidget();
     }
 
     return Container();
@@ -621,6 +633,183 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           itemCount:3,
         )
+    );
+  }
+
+  Widget getStatisticWidget(){
+    return Container(
+      child:ListView.builder(
+        itemBuilder:(ctx,idx){
+
+          if(idx==0){
+            List<FlSpot> spots=[];
+
+            for(final w in allWorkouts){
+              if(chartIndex==0){
+                //운동시간
+                spots.add(FlSpot(w.date.toDouble(),w.time.toDouble()));
+              }else if(chartIndex==1){
+                //칼로리
+                spots.add(FlSpot(w.date.toDouble(),w.kcal.toDouble()));
+              }else{
+                //운동거리
+                spots.add(FlSpot(w.date.toDouble(),w.distance.toDouble()));
+              }
+            }
+            return Container(
+              margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+              padding:const EdgeInsets.symmetric(horizontal:15,vertical:6),
+              child:Column(
+                children: [
+                  Row(
+                    children: [
+                      InkWell(
+                          child:Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+                            child:Text("운동시간",style:TextStyle(color:chartIndex==0?Colors.white:iTxColor)),
+                            decoration: BoxDecoration(
+                                color:chartIndex==0?mainColor:ibgColor,
+                                borderRadius:BorderRadius.circular(8)),
+                          ),
+
+                          onTap:(){
+                            setState((){
+                              chartIndex=0;
+                            });
+                          }
+                      ),
+                      InkWell(
+                          child:Container(
+                            margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+                            padding:const EdgeInsets.symmetric(horizontal:15,vertical:6),
+                            child:Text("칼로리",style:TextStyle(color:chartIndex==1?Colors.white:iTxColor)),
+                            decoration: BoxDecoration(
+                                color:chartIndex==1?mainColor:ibgColor,
+                                borderRadius:BorderRadius.circular(8)),
+                          ),
+
+                          onTap:(){
+                            setState((){
+                              chartIndex=1;
+                            });
+                          }
+                      ),
+                      InkWell(
+                          child:Container(
+                            margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+                            padding:const EdgeInsets.symmetric(horizontal: 15,vertical: 6),
+                            child:Text("운동거리",style:TextStyle(color:chartIndex==2?Colors.white:iTxColor)),
+                            decoration: BoxDecoration(
+                                color:chartIndex==2?mainColor:ibgColor,
+                                borderRadius:BorderRadius.circular(8)),
+                          ),
+
+                          onTap:(){
+                            setState((){
+                              chartIndex=2;
+                            });
+                          }
+                      )
+                    ],
+                  ),
+                  Container(
+                      height:300,
+                      margin:const EdgeInsets.symmetric(horizontal: 2,vertical: 12),
+                      padding:const EdgeInsets.symmetric(horizontal: 35,vertical: 16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color:bgColor,
+                          boxShadow:const [
+                            BoxShadow(
+                              color:Colors.black12,
+                              spreadRadius: 4,
+                              blurRadius: 4,
+                            )
+                          ]
+                      ),
+                      child:LineChart(
+                          LineChartData(
+                              lineBarsData:[
+                                LineChartBarData(
+                                  spots:spots,
+                                  colors:[mainColor],
+                                ),
+                              ],
+                              gridData:FlGridData(show:false),
+                              borderData:FlBorderData(show:false),
+                              lineTouchData:LineTouchData(
+                                  touchTooltipData:LineTouchTooltipData(
+                                      getTooltipItems:(spots){
+                                        return [
+                                          LineTooltipItem(
+                                            "${spots.first.y}",TextStyle(color:mainColor),
+                                          )
+                                        ];
+                                      }
+                                  )
+                              ),
+                              titlesData:FlTitlesData(
+                                  bottomTitles:SideTitles(
+                                      showTitles:true,
+                                      getTitles:(value){
+
+                                        DateTime date=Utils.stringToDateTime(value.toInt().toString());
+                                        print("date is $value");
+                                        return "${date.day} 일";
+                                      }
+                                  ),
+                                  leftTitles:SideTitles(
+                                    showTitles: false,
+                                  )
+                              )
+                          )
+                      )
+                  )
+                ],
+              ),
+
+            );
+          }else if(idx==1){
+            return Container(
+              height:cardSize,
+              width:cardSize,
+              child:ListView.builder(
+                itemBuilder:(ctx,_idx){
+                  return MainFoodCard(food:allFoods[_idx]);
+                }
+                ,itemCount:allFoods.length,
+                scrollDirection:Axis.horizontal,
+              )
+            );
+          }else if(idx==2){
+            return Container(
+              height:cardSize,
+              width:cardSize,
+              child:ListView.builder(
+                itemBuilder:(ctx,_idx){
+                  return MainWorkoutCard(workout:allWorkouts[_idx]);
+                }
+                ,itemCount:allWorkouts.length,
+                scrollDirection: Axis.horizontal,
+              )
+            );
+          }else if(idx==3){
+            return Container(
+              height: cardSize,
+              width:cardSize,
+              child:ListView.builder(
+                itemBuilder:(ctx,_idx){
+                  return MainEyeBodyCard(eyeBody:allBodies[_idx]);
+                }
+                ,itemCount:allBodies.length,
+                scrollDirection: Axis.horizontal,
+              )
+            );
+          }
+          return Container();
+        },
+        itemCount:4,
+      )
     );
   }
 }
