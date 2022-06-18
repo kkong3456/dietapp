@@ -5,6 +5,7 @@ import 'package:dietapp/style.dart';
 import 'package:dietapp/view/body.dart';
 import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -50,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<EyeBody> bodies=[];
   List<Weight> weight=[];
 
+  List<Weight> weights=[];
+
   void getHistories() async{
     int _d=Utils.getFormatTime(dateTime);
 
@@ -57,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     workouts=await dbHelper.queryWorkoutByDate(_d);
     bodies=await dbHelper.queryEyeBodyByDate(_d);
     weight=await dbHelper.queryWeightByDate(_d);
+
+    weights=await dbHelper.queryAllWeight();
 
     if(weight.isNotEmpty){
       final w=weight.first;
@@ -86,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('비니의 다이어트'),
       ),
       body: getPage(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:![0,1].contains(currentIndex)?Container():FloatingActionButton(
         onPressed: (){
           showModalBottomSheet(
             backgroundColor: bgColor,
@@ -212,6 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController wCtrl=TextEditingController();
   TextEditingController mCtrl=TextEditingController();
   TextEditingController fCtrl=TextEditingController();
+  
 
   Widget getHomeWidget(){
     return Container(
@@ -252,6 +258,34 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder:(ctx,idx){
               if(idx==0){
                 //몸무게
+                if(weight.isEmpty){
+                  return Container();
+                }else{
+                  final w=weight.first;
+                  return Container(
+                    height:cardSize,
+                    width:cardSize,
+                    child: Container(
+                      margin:const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:bgColor,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            color:Colors.black12,
+                            spreadRadius:4,
+                            blurRadius: 4,
+                        )]
+                      ),
+                      child: Column(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children: [
+                          Text("${w.weight}kg",style:const TextStyle(fontSize:25,fontWeight:FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
               }else{
                 if(bodies.isEmpty){
                   return Container(
@@ -293,6 +327,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child:TableCalendar(
                 calendarController: calendarController,
                 initialSelectedDay: dateTime,
+                calendarStyle: CalendarStyle(
+                  selectedColor:mainColor,
+                ),
                 onDaySelected: (date,events,holiday){
                   dateTime=date;
                   getHistories();
@@ -312,7 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
+  int chartIndex=0;
   Widget getWeightWidget(){
 
     return Container(
@@ -340,10 +377,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("${dateTime.month}월 ${dateTime.day}일",style:TextStyle(fontSize:16,fontWeight:FontWeight.bold)),
+                        Text("${dateTime.month}월 ${dateTime.day}일",style:const TextStyle(fontSize:16,fontWeight:FontWeight.bold)),
                         InkWell(
                           child: Container(
-                            child:Text("저장",style:TextStyle(fontWeight:FontWeight.bold)),
+                            child:const Text("저장",style:TextStyle(fontWeight:FontWeight.bold)),
                             decoration: BoxDecoration(
                               color:mainColor,
                               borderRadius:BorderRadius.circular(8),
@@ -362,6 +399,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             w.fat=int.tryParse(wCtrl.text)??0;
 
                             await dbHelper.insertWeight(w);
+                            getHistories();
+                            FocusScope.of(context).unfocus();
                           }
                         )
                       ],
@@ -449,10 +488,138 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 )
               );
+            }else if(idx==2){
+              List<FlSpot> spots=[];
+
+              for(final w in weights){
+                if(chartIndex==0){
+                  //몸무게
+                  spots.add(FlSpot(w.date.toDouble(),w.weight.toDouble()));
+                }else if(chartIndex==1){
+                  //근육량
+                  spots.add(FlSpot(w.date.toDouble(),w.muscle.toDouble()));
+                }else{
+                  //지방
+                  spots.add(FlSpot(w.date.toDouble(),w.fat.toDouble()));
+                }
+              }
+              return Container(
+                  margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+                  padding:const EdgeInsets.symmetric(horizontal:15,vertical:6),
+                child:Column(
+                  children: [
+                    Row(
+                      children: [
+                        InkWell(
+                          child:Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+                            child:Text("몸무게",style:TextStyle(color:chartIndex==0?Colors.white:iTxColor)),
+                            decoration: BoxDecoration(
+                                color:chartIndex==0?mainColor:ibgColor,
+                                borderRadius:BorderRadius.circular(8)),
+                          ),
+                          
+                          onTap:(){
+                            setState((){
+                              chartIndex=0;
+                            });
+                          }
+                        ),
+                        InkWell(
+                            child:Container(
+                              margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+                              padding:const EdgeInsets.symmetric(horizontal:15,vertical:6),
+                              child:Text("근육량",style:TextStyle(color:chartIndex==1?Colors.white:iTxColor)),
+                              decoration: BoxDecoration(
+                                  color:chartIndex==1?mainColor:ibgColor,
+                                  borderRadius:BorderRadius.circular(8)),
+                            ),
+
+                            onTap:(){
+                              setState((){
+                                chartIndex=1;
+                              });
+                            }
+                        ),
+                        InkWell(
+                            child:Container(
+                              margin:const EdgeInsets.symmetric(horizontal: 5,vertical: 6),
+                              padding:const EdgeInsets.symmetric(horizontal: 15,vertical: 6),
+                              child:Text("지 방",style:TextStyle(color:chartIndex==2?Colors.white:iTxColor)),
+                              decoration: BoxDecoration(
+                                  color:chartIndex==2?mainColor:ibgColor,
+                                  borderRadius:BorderRadius.circular(8)),
+                            ),
+
+                            onTap:(){
+                              setState((){
+                                chartIndex=2;
+                              });
+                            }
+                        )
+                      ],
+                    ),
+                    Container(
+                      height:300,
+                      margin:const EdgeInsets.symmetric(horizontal: 2,vertical: 12),
+                      padding:const EdgeInsets.symmetric(horizontal: 35,vertical: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color:bgColor,
+                        boxShadow:const [
+                          BoxShadow(
+                            color:Colors.black12,
+                            spreadRadius: 4,
+                            blurRadius: 4,
+                          )
+                        ]
+                      ),
+                      child:LineChart(
+                        LineChartData(
+                          lineBarsData:[
+                            LineChartBarData(
+                              spots:spots,
+                              colors:[mainColor],
+                            ),
+                          ],
+                          gridData:FlGridData(show:false),
+                          borderData:FlBorderData(show:false),
+                          lineTouchData:LineTouchData(
+                            touchTooltipData:LineTouchTooltipData(
+                              getTooltipItems:(spots){
+                                return [
+                                  LineTooltipItem(
+                                    "${spots.first.y}kg",TextStyle(color:mainColor),
+                                  )
+                                ];
+                              }
+                            )
+                          ),
+                          titlesData:FlTitlesData(
+                            bottomTitles:SideTitles(
+                              showTitles:true,
+                              getTitles:(value){
+
+                                DateTime date=Utils.stringToDateTime(value.toInt().toString());
+                                print("date is $value");
+                                  return "${date.day} 일";
+                              }
+                            ),
+                            leftTitles:SideTitles(
+                              showTitles: false,
+                            )
+                          )
+                        )
+                      )
+                    )
+                  ],
+                ),
+
+              );
             }
             return Container();
           },
-          itemCount:2,
+          itemCount:3,
         )
     );
   }
