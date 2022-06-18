@@ -7,6 +7,7 @@ import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -91,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         await Navigator.of(context).push(
                           MaterialPageRoute(builder:(ctx)=>FoodAddPage(
                               food:Food(
-                                date:Utils.getFormatTime(DateTime.now()),
+                                date:Utils.getFormatTime(dateTime),
                                 kcal:0,
                                 memo:"",
                                 type:0,
@@ -109,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         await Navigator.of(context).push(
                           MaterialPageRoute(builder:(ctx)=>WorkoutAddPage(
                             workout:Workout(
-                              date:Utils.getFormatTime(DateTime.now()),
+                              date:Utils.getFormatTime(dateTime),
                               time:1130,
                               type:0,
                               kcal:0,
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         await Navigator.of(context).push(
                           MaterialPageRoute(builder:(ctx)=>EyeBodyAddPage(
                             body:EyeBody(
-                              date:Utils.getFormatTime(DateTime.now()),
+                              date:Utils.getFormatTime(dateTime),
                               image:"",
                               memo:"",
                             )
@@ -186,17 +187,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget getPage(){
     if(currentIndex==0){
-      return getHomeWidget(DateTime.now());
+      return getHomeWidget();
+    }else if(currentIndex==1){
+      return getHistoryWidget();
     }
 
     return Container();
   }
+  CalendarController calendarController=CalendarController();
+  CalendarController weightController=CalendarController();
 
-  Widget getHomeWidget(DateTime date){
+  Widget getHomeWidget(){
     return Container(
       child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(child:ListView.builder(
+          Container(child:foods.isEmpty? Container(child:ClipRRect(
+              child: Image.asset("assets/img/food.png"),borderRadius: BorderRadius.circular(12),)
+              ,padding:const EdgeInsets.all(8)):ListView.builder(
             itemBuilder: (ctx,idx){
               return Container(
                 child:MainFoodCard(food:foods[idx]),
@@ -209,7 +217,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
             height:cardSize,
           ),
-          Container(child:ListView.builder(
+          Container(child:workouts.isEmpty? Container(child:ClipRRect(
+            child:Image.asset("assets/img/workout.png"),borderRadius: BorderRadius.circular(12),),
+            padding:const EdgeInsets.all(8),):ListView.builder(
             itemBuilder:(ctx,idx){
               return Container(
                 height:cardSize,
@@ -229,6 +239,8 @@ class _MyHomePageState extends State<MyHomePage> {
               }else{
                 if(bodies.isEmpty){
                   return Container(
+                    child:ClipRRect(child:Image.asset("assets/img/body.png"),borderRadius:BorderRadius.circular(12)),
+                    padding: const EdgeInsets.all(8),
                     height:cardSize,
                     width:cardSize,
                     color:mainColor,
@@ -253,6 +265,64 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget getHistoryWidget(){
+    return Container(
+      child:ListView.builder(
+        itemBuilder: (ctx,idx){
+          if(idx==0){
+            return Container(
+              child:TableCalendar(
+                calendarController: calendarController,
+                initialSelectedDay: dateTime,
+                onDaySelected: (date,events,holiday){
+                  dateTime=date;
+                  getHistories();
+                },
+                headerStyle:const HeaderStyle(centerHeaderTitle: true),
+                initialCalendarFormat: CalendarFormat.month,
+                availableCalendarFormats: {CalendarFormat.month:""},
+              )
+            );
+          }else if(idx==1){
+            return getHomeWidget();
+          }
+          return Container();
+        },
+        itemCount:2,
+      )
+    );
+  }
+
+
+  Widget getWeightWidget(){
+
+    return Container(
+        child:ListView.builder(
+          itemBuilder: (ctx,idx){
+            if(idx==0){
+              return Container(
+                  child:TableCalendar(
+                    calendarController: weightController,
+                    initialSelectedDay: dateTime,
+                    onDaySelected: (date,events,holiday){
+                      dateTime=date;
+                      getHistories();
+                    },
+                    headerStyle:const HeaderStyle(centerHeaderTitle: true),
+                    initialCalendarFormat: CalendarFormat.month,
+                    availableCalendarFormats: {CalendarFormat.month:""},
+                  )
+              );
+            }else if(idx==1){
+              return getHomeWidget();
+            }
+            return Container();
+          },
+          itemCount:2,
+        )
     );
   }
 }
