@@ -56,8 +56,18 @@ class _MyHomePageState extends State<MyHomePage> {
     foods=await dbHelper.queryFoodByDate(_d);
     workouts=await dbHelper.queryWorkoutByDate(_d);
     bodies=await dbHelper.queryEyeBodyByDate(_d);
-    // weight=await dbHelper.queryWeightByDate(_d);
+    weight=await dbHelper.queryWeightByDate(_d);
 
+    if(weight.isNotEmpty){
+      final w=weight.first;
+      wCtrl.text=w.weight.toString();
+      mCtrl.text=w.muscle.toString();
+      fCtrl.text=w.fat.toString();
+    }else{
+      wCtrl.text="";
+      mCtrl.text="";
+      fCtrl.text="";
+    }
     setState((){});
   }
 
@@ -190,12 +200,18 @@ class _MyHomePageState extends State<MyHomePage> {
       return getHomeWidget();
     }else if(currentIndex==1){
       return getHistoryWidget();
+    }else if(currentIndex==2){
+      return getWeightWidget();
     }
 
     return Container();
   }
   CalendarController calendarController=CalendarController();
   CalendarController weightController=CalendarController();
+
+  TextEditingController wCtrl=TextEditingController();
+  TextEditingController mCtrl=TextEditingController();
+  TextEditingController fCtrl=TextEditingController();
 
   Widget getHomeWidget(){
     return Container(
@@ -312,12 +328,127 @@ class _MyHomePageState extends State<MyHomePage> {
                       getHistories();
                     },
                     headerStyle:const HeaderStyle(centerHeaderTitle: true),
-                    initialCalendarFormat: CalendarFormat.month,
-                    availableCalendarFormats: {CalendarFormat.month:""},
+                    initialCalendarFormat: CalendarFormat.week,
+                    availableCalendarFormats: {CalendarFormat.week:""},
                   )
               );
             }else if(idx==1){
-              return getHomeWidget();
+              return Container(
+                margin:const EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                child:Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("${dateTime.month}월 ${dateTime.day}일",style:TextStyle(fontSize:16,fontWeight:FontWeight.bold)),
+                        InkWell(
+                          child: Container(
+                            child:Text("저장",style:TextStyle(fontWeight:FontWeight.bold)),
+                            decoration: BoxDecoration(
+                              color:mainColor,
+                              borderRadius:BorderRadius.circular(8),
+                            ),
+                            padding:const EdgeInsets.symmetric(horizontal: 10,vertical:6),
+                          ),
+                          onTap:() async{
+                            Weight w;
+                            if(weight.isEmpty){
+                              w=Weight(date:Utils.getFormatTime(dateTime));
+                            }else{
+                              w=weight.first;
+                            }
+                            w.muscle=int.tryParse(mCtrl.text)??0;
+                            w.weight=int.tryParse(wCtrl.text)??0;
+                            w.fat=int.tryParse(wCtrl.text)??0;
+
+                            await dbHelper.insertWeight(w);
+                          }
+                        )
+                      ],
+                    ),
+                    Container(height:12),
+                    Row(
+                      children: [
+                        Container(width:8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:CrossAxisAlignment.stretch,
+                            children: [
+
+                              const Text("몸무게",textAlign:TextAlign.center),
+                              TextField(
+                                controller: wCtrl,
+                                keyboardType:TextInputType.number,
+                                textAlign:TextAlign.end,
+                                decoration: InputDecoration(
+                                  border:UnderlineInputBorder(
+                                    borderSide:const BorderSide(
+                                      color:txtColor,
+                                      width:0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
+
+                                ),
+
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(width:8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:CrossAxisAlignment.stretch,
+                            children: [
+                              const Text("근육량",textAlign:TextAlign.center),
+                              TextField(
+                                controller: mCtrl,
+                                keyboardType:TextInputType.number,
+                                textAlign:TextAlign.end,
+                                decoration: InputDecoration(
+                                  border:UnderlineInputBorder(
+                                      borderSide:const BorderSide(
+                                        color:txtColor,
+                                        width:0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+                                ),
+
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(width:8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:CrossAxisAlignment.stretch,
+                            children: [
+                              const Text("지방",textAlign:TextAlign.center),
+                              TextField(
+                                controller: fCtrl,
+                                keyboardType:TextInputType.number,
+                                textAlign:TextAlign.end,
+                                decoration: InputDecoration(
+                                  border:UnderlineInputBorder(
+                                      borderSide:const BorderSide(
+                                        color:txtColor,
+                                        width:0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+
+                                ),
+
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                )
+              );
             }
             return Container();
           },
