@@ -8,10 +8,24 @@ import 'package:dietapp/view/worktout.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-void main() {
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+void main() async {
   runApp(const MyApp());
+  tz.initializeTimeZones;
+
+  const AndroidNotificationChannel androidNotificationChannel=AndroidNotificationChannel("빈의 알림","dietapp","dietapp");
+
+  flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(androidNotificationChannel);
 }
 
 class MyApp extends StatelessWidget {
@@ -58,6 +72,53 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Weight> weight=[];
   List<Weight> weights=[];
 
+  //알림초기화 및 알림 설정
+  Future<bool> initNotification() async{
+    flutterLocalNotificationsPlugin ??= FlutterLocalNotificationsPlugin();
+    var initSettingAndroid=const AndroidInitializationSettings("app_icon");
+    var initiOSSetting=const IOSInitializationSettings();
+
+    var initSetting=InitializationSettings(
+      android: initSettingAndroid,
+      iOS:initiOSSetting,
+    );
+    
+    await flutterLocalNotificationsPlugin.initialize(initSetting,
+        onSelectNotification:(payload) async{
+
+    });
+
+    setScheduling();
+    return true;
+  }
+
+  //알림 스케줄링
+  void setScheduling(){
+    var android=const AndroidNotificationDetails(
+        "빈의 알림","dietapp","dietapp",
+      importance: Importance.max,
+      priority: Priority.max,
+    );
+    var ios=IOSNotificationDetails();
+
+    NotificationDetails detail=NotificationDetails(
+      android:android,
+      iOS:ios,
+    );
+
+    flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      "빈 학교가야 할시간 ",
+      "아침식사를 먼저 하세요 ",
+      tz.TZDateTime.from(DateTime.now().add(const Duration(seconds: 10)),tz.local),
+      detail,
+      androidAllowWhileIdle:true,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      payload: "dietapp",
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
   void getHistories() async{
     int _d=Utils.getFormatTime(dateTime);
 
@@ -90,6 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState(){
     super.initState();
     getHistories();
+    initNotification();
   }
 
   @override
@@ -180,7 +242,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes
       bottomNavigationBar:BottomNavigationBar(
-
         type:BottomNavigationBarType.fixed,
         items:const [
           BottomNavigationBarItem(
