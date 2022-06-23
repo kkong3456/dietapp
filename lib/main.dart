@@ -8,6 +8,7 @@ import 'package:dietapp/view/body.dart';
 import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ void main() async {
   changeToDarkMode();
   initializeDateFormatting().then((_) { //캘린더 테이블의 한글지원을 위해
     runZonedGuarded(() async {
-      runApp(const MyApp());
+      runApp(MyApp());
     },(error,stackTrace){
       FirebaseCrashlytics.instance.recordError(error,stackTrace);
     }
@@ -42,7 +43,7 @@ void main() async {
 // }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   final anaylitics=FirebaseAnalytics();
 
@@ -72,6 +73,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final dbHelper = DatabaseHelper.instance;
+
+  FirebaseAnalytics analytics=FirebaseAnalytics();
 
   int currentIndex = 0;
 
@@ -115,6 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
       fCtrl.text = "";
     }
     setState(() {});
+    
+    analytics.setUserProperty(name: "sex", value: "남자");
+    analytics.setUserProperty(name: "sex", value: "여자");
   }
 
   @override
