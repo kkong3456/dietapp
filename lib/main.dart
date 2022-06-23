@@ -7,6 +7,7 @@ import 'package:dietapp/style.dart';
 import 'package:dietapp/view/body.dart';
 import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
 
+  final anaylitics=FirebaseAnalytics();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MyHomePage(),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: anaylitics)
+      ],
     );
   }
 }
