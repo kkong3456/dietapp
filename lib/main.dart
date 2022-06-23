@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dietapp/data/data.dart';
 import 'package:dietapp/data/database.dart';
 import 'package:dietapp/data/utils.dart';
@@ -5,6 +7,7 @@ import 'package:dietapp/style.dart';
 import 'package:dietapp/view/body.dart';
 import 'package:dietapp/view/food.dart';
 import 'package:dietapp/view/worktout.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,8 +23,13 @@ void main() async {
   Firebase.initializeApp();
   changeToDarkMode();
   initializeDateFormatting().then((_) { //캘린더 테이블의 한글지원을 위해
-    runApp(const MyApp());
-  });
+    runZonedGuarded(() async {
+      runApp(const MyApp());
+    },(error,stackTrace){
+      FirebaseCrashlytics.instance.recordError(error,stackTrace);
+    }
+    );});
+
 }
 
 // void main() async {
