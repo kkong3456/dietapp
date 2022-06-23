@@ -39,6 +39,8 @@ dependencies:
   table_calendar: ^2.3.3
   fl_chart: ^0.12.3
 
+  firebase_core:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

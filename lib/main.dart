@@ -11,12 +11,26 @@ import 'package:flutter/widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Firebase.initializeApp();
   changeToDarkMode();
   initializeDateFormatting().then((_) { //캘린더 테이블의 한글지원을 위해
     runApp(const MyApp());
   });
 }
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
