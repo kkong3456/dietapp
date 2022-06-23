@@ -30,7 +30,7 @@ class _EyeBodyAddPageState extends State<EyeBodyAddPage>{
     return Scaffold(
       appBar: AppBar(
           backgroundColor: bgColor,
-          iconTheme:const IconThemeData(
+          iconTheme:IconThemeData(
             color:txtColor,
           ),
           elevation: 0.3,
@@ -85,7 +85,7 @@ class _EyeBodyAddPageState extends State<EyeBodyAddPage>{
                         controller: memoController,
                         decoration:InputDecoration(
                             border:OutlineInputBorder(
-                              borderSide:const BorderSide(color:txtColor,width:5),
+                              borderSide:BorderSide(color:txtColor,width:5),
                               borderRadius:BorderRadius.circular(12),
                             )
                         ),

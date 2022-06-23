@@ -30,7 +30,7 @@ class _FoodAddPageState extends State<FoodAddPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: bgColor,
-        iconTheme:const IconThemeData(
+        iconTheme:IconThemeData(
           color:txtColor,
         ),
         elevation: 0.3,
@@ -199,7 +199,7 @@ class _FoodAddPageState extends State<FoodAddPage>{
                       controller: memoController,
                       decoration:InputDecoration(
                         border:OutlineInputBorder(
-                          borderSide:const BorderSide(color:txtColor,width:5),
+                          borderSide:BorderSide(color:txtColor,width:5),
                           borderRadius:BorderRadius.circular(12),
                         )
                       ),

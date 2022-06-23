@@ -39,7 +39,7 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
     return Scaffold(
       appBar: AppBar(
           backgroundColor: bgColor,
-          iconTheme:const IconThemeData(
+          iconTheme:IconThemeData(
             color:txtColor,
           ),
           elevation: 0.3,
@@ -75,6 +75,7 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
             ),
           ]
       ),
+      backgroundColor: bgColor,
       body:Container(
           child:ListView.builder(
             itemBuilder:(ctx,idx){
@@ -101,9 +102,10 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                       Expanded(
                         child:TextField(
                           controller: nameController,
+                          style:mTS.apply(color:txtColor),
                           decoration: InputDecoration(
                             border:OutlineInputBorder(
-                              borderSide:const BorderSide(color:txtColor,width:0.5),
+                              borderSide:BorderSide(color:txtColor,width:0.5),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
@@ -121,14 +123,15 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
                         children:[
-                          Text("운동시간"),
+                          Text("운동시간",style:mTS.apply(color:txtColor)),
                           Container(child:TextField(
                             controller:timeController,
                             keyboardType:TextInputType.number,
                             textAlign:TextAlign.end,
+                            style:mTS.apply(color:txtColor),
                             decoration:InputDecoration(
                               border:UnderlineInputBorder(
-                                borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                borderSide:BorderSide(width:0.5,color:txtColor,),
                                 borderRadius:BorderRadius.circular(8)
                             )
                           ),),
@@ -139,14 +142,15 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
                         children:[
-                          Text("운동칼로리"),
+                          Text("운동칼로리",style:mTS.apply(color:txtColor)),
                           Container(child:TextField(
                             controller:calController,
                             keyboardType:TextInputType.number,
                             textAlign:TextAlign.end,
+                            style:mTS.apply(color:txtColor),
                             decoration:InputDecoration(
                                 border:UnderlineInputBorder(
-                                    borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                    borderSide: BorderSide(width:0.5,color:txtColor,),
                                     borderRadius:BorderRadius.circular(8)
                                 )
                             ),),
@@ -157,14 +161,15 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
                         children:[
-                          Text("운동거리"),
+                          Text("운동거리",style:mTS.apply(color:txtColor)),
                           Container(child:TextField(
                             controller:distanceController,
                             keyboardType:TextInputType.number,
                             textAlign:TextAlign.end,
+                            style:mTS.apply(color:txtColor),
                             decoration:InputDecoration(
                                 border:UnderlineInputBorder(
-                                    borderSide:const BorderSide(width:0.5,color:txtColor,),
+                                    borderSide:BorderSide(width:0.5,color:txtColor,),
                                     borderRadius:BorderRadius.circular(8)
                                 )
                             ),),
@@ -183,8 +188,8 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                     children: [
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text("운동 부위"),
+                        children: [
+                          Text("운동 부위",style:mTS.apply(color:txtColor)),
                         ],
                       ),
                       Container(
@@ -223,8 +228,8 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                     children: [
                       Row(
                         mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text("운동 강도"),
+                        children: [
+                          Text("운동 강도",style:mTS.apply(color:txtColor)),
                         ],
                       ),
                       Container(
@@ -262,16 +267,17 @@ class _WorkoutAddPageState extends State<WorkoutAddPage>{
                   child:Column(
                     crossAxisAlignment:CrossAxisAlignment.start,
                     children: [
-                      const Text("메모"),
+                      Text("메모",style:mTS.apply(color:txtColor)),
                       Container(height:12),
                       TextField(
                         maxLines:5,
                         minLines:5,
                         // keyboardType:TextInputType.multiline,
                         controller: memoController,
+                        style:mTS.apply(color:txtColor),
                         decoration:InputDecoration(
                             border:OutlineInputBorder(
-                              borderSide:const BorderSide(color:txtColor,width:5),
+                              borderSide: BorderSide(color:txtColor,width:5),
                               borderRadius:BorderRadius.circular(12),
                             )
                         ),
@@ -336,6 +342,7 @@ class MainWorkoutCard extends StatelessWidget{
                           "${Utils.makeTwoDigit(workout.time ~/60)}:"
                               "${Utils.makeTwoDigit(workout.time%60)}",
                         textAlign:TextAlign.end,
+                        style:mTS.apply(color:txtColor),
 
                       ),
                     ),
@@ -343,10 +350,10 @@ class MainWorkoutCard extends StatelessWidget{
                 ),
                 Container(height:8),
                 Expanded(
-                  child:Text(workout.name),
+                  child:Text(workout.name,style:mTS.apply(color:txtColor)),
                 ),
-                Text(workout.kcal==0?"":"${workout.kcal}Kcal"),
-                Text(workout.distance==0?"":"${workout.distance}Km"),
+                Text(workout.kcal==0?"":"${workout.kcal}Kcal",style:sTS.apply(color:txtColor)),
+                Text(workout.distance==0?"":"${workout.distance}Km",style:sTS.apply(color:txtColor)),
               ],
             )
           )
