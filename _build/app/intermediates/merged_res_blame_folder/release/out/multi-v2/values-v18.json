@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.dietapp-mergeReleaseResources-22:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "/Users/admin/.gradle/caches/transforms-3/2597229d49c79e3e2bbefb86c5d1f79c/transformed/appcompat-1.0.0/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

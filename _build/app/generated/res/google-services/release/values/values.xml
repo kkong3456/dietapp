@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">381818918648-5ukphsfkdt2nsg7eqjh5qqdob55dg3ji.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">381818918648</string>
+    <string name="google_api_key" translatable="false">AIzaSyA_m6KfKmSX5f_G_O3Cw4jJj5cB6ZG9uSM</string>
+    <string name="google_app_id" translatable="false">1:381818918648:android:e7651495e64ef323624d0d</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyA_m6KfKmSX5f_G_O3Cw4jJj5cB6ZG9uSM</string>
+    <string name="google_storage_bucket" translatable="false">dietapp-5a34c.appspot.com</string>
+    <string name="project_id" translatable="false">dietapp-5a34c</string>
+</resources>
